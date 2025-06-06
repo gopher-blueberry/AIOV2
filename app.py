@@ -6,7 +6,7 @@ USERS = [{
     'id': 1,
     'username': '______',
     'email': '______',
-    'password': '_____'
+    'password': '__'
 }]
 
 
