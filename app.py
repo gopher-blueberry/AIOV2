@@ -4,9 +4,9 @@ app = Flask(__name__)
 
 USERS = [{
     'id': 1,
-    'username': '______',
-    'email': '______',
-    'password': '__'
+    'username': 'gopherblueberry',
+    'email': 'gopherblueberry@gmail.com',
+    'password': '$'
 }]
 
 
