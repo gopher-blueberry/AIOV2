@@ -1,24 +1,68 @@
 from flask import Flask, render_template, jsonify
+import pymysql
+from database import engine
+from sqlalchemy import text
+
+
 
 app = Flask(__name__)
 
-USERS = [{
-    'id': 1,
-    'username': 'gopherblueberry',
-    'email': 'gopherblueberry@gmail.com',
-    'password': '$'
-}]
+
+#No se puede importar la funcion desde database.py quien sabe porque tons aquí está   
+
+
+def load_users_from_db():
+   
+   with engine.connect() as conn:
+    result = conn.execute(text("select * from users"))
+
+    users = []
+    for row in result.all():
+        users.append(row._mapping)
+    return users
 
 
 @app.route("/")
 def hello_jovian():
-  return render_template('home.html', username=USERS, company_name='AIO')
+  users = load_users_from_db()
+  return render_template('home.html', users=users, company_name='AIO')
 
 
-@app.route("/api/usernames")
+@app.route("/api/users")
 def list_users():
+  USERS = load_users_from_db()
   return jsonify(USERS)
 #Para datos en formato JSON
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
+
+
+
+
+
+
+#Este código es para conectarse a la base de datos de Aiven y crear una tabla y luego insertar datos en ella.
+
+timeout = 10
+connection = pymysql.connect(
+    charset="utf8mb4",
+    connect_timeout=timeout,
+    cursorclass=pymysql.cursors.DictCursor,
+    db="newdatabaseformysql",
+    host= "aio-moviesv2-aio-movies.c.aivencloud.com",
+    password="AVNS_5g2Um49Zo1pu6CQWE_S",
+    read_timeout=timeout,
+    port=13633,
+    user="avnadmin",
+    write_timeout=timeout,
+)
+
+try:
+    cursor = connection.cursor()
+    cursor.execute("CREATE TABLE mytest (id INTEGER PRIMARY KEY)")
+    cursor.execute("INSERT INTO mytest (id) VALUES (1), (2)")
+    cursor.execute("SELECT * FROM mytest")
+    print(cursor.fetchall())
+finally:
+    connection.close()
