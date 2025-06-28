@@ -22,10 +22,18 @@ def load_users_from_db():
     return users
 
 
+
+@app.route("/")
+def hello_flask():
+  users = load_users_from_db()
+  return render_template('home.html', users=users, company_name='AIO')
+
+
 @app.route("/")
 def hello_jovian():
   users = load_users_from_db()
   return render_template('home.html', users=users, company_name='AIO')
+
 
 
 @app.route("/api/users")
@@ -33,6 +41,10 @@ def list_users():
   USERS = load_users_from_db()
   return jsonify(USERS)
 #Para datos en formato JSON
+
+
+
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
