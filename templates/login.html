@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN</title>
-</head>
-<body>
-    {% include 'nav.html' %}
-</body>
-</html>
+    <title>APPLYUSER</title>
+   <h4>Application Form</h4>
+<form action="/apply" method="post">
+  <div class="mb-2">
+  <label>Full Name</label><br>
+  <input type="text" required name="user" placeholder="Bruce Wayne">
+  </div>
+
+  <div class="mb-2">
+  <label>Email</label><br>
+  <input type="email" required name="email" placeholder="bruce@wayne.com">
+  </div>
+
+  <div class="mb-2">
+  <label>LinkedIn URL</label><br>
+  <input type="url" name="linkedin_url" placeholder="https://linked.com/in/brucewayne">
+  </div>
+
+
+  <input type="submit">
+</form>

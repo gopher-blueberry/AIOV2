@@ -19,27 +19,34 @@ engine = create_engine(connection_string,
                        })
 
 
+def load_users_from_db():
+   
+   with engine.connect() as conn:
+    result = conn.execute(text("select * from users"))
+
+    users = []
+    for row in result.all():
+        users.append(row._mapping)
+    print(users)    
+    return users
 
 
+load_users_from_db()
 
 
+def add_aplication_to_db(data):
+    with engine.connect() as conn:
+        query = text(
+            f"INSERT INTO APPLICATIONS(user, email, linkedin_url) VALUES (:user, :email, :linkedin_url)"
+        )
 
-
-
-
-
-
-
-
-
-    #enseñando resultados con print y tipos para confirmar que la conexión a la base de datos de ha hecho
-
-"""print(type(result))
-result_all = result.all()
-print("type(result.all())", type(result_all))
-print("result.all():", result_all)
-first_result = result_all[0]
-print("type(first_result):",type(result_all[0]))
-
-first_result_dict = result_all[0]._asdict()
-print("type(first_result_dict):",type(first_result_dict)) """
+        conn.execute(
+            query,
+            {
+                
+                "user": data["user"],
+                "email": data["email"],
+                "linkedin_url": data["linkedin_url"]
+            },
+        )
+        conn.commit()

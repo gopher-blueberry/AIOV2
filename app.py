@@ -1,6 +1,6 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import pymysql
-from database import engine
+from database import engine, load_users_from_db, add_aplication_to_db
 from sqlalchemy import text
 
 
@@ -8,18 +8,9 @@ from sqlalchemy import text
 app = Flask(__name__)
 
 
-#No se puede importar la funcion desde database.py quien sabe porque tons aquí está   
 
 
-def load_users_from_db():
-   
-   with engine.connect() as conn:
-    result = conn.execute(text("select * from users"))
 
-    users = []
-    for row in result.all():
-        users.append(row._mapping)
-    return users
 
 
 
@@ -29,18 +20,34 @@ def hello_flask():
   return render_template('home.html', users=users, company_name='AIO')
 
 
-@app.route("/")
-def hello_jovian():
-  users = load_users_from_db()
-  return render_template('home.html', users=users, company_name='AIO')
 
 
 
 @app.route("/api/users")
 def list_users():
-  USERS = load_users_from_db()
-  return jsonify(USERS)
+  jobs = load_users_from_db()
+  return jsonify(jobs)
 #Para datos en formato JSON
+
+
+@app.route("/user")
+
+def apply_to_be():
+   data = request.form
+   return render_template('login.html')
+
+
+    
+
+@app.route("/apply", methods = ['post'])
+
+def apply_to_be_user():
+   data = request.form
+  #guardar en base
+   add_aplication_to_db(data)
+
+   return render_template('application_sub.html', application = data)
+
 
 
 
